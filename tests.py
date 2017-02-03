@@ -16,18 +16,17 @@ class PartyTests(unittest.TestCase):
         self.assertIn("board games, rainbows, and ice cream sundaes", result.data)
 
     def test_no_rsvp_yet(self):
-        # FIXME: Add a test to show we see the RSVP form, but NOT the
-        # party details
-        print "FIXME"
+        result = self.client.get("/")
+        self.assertIn("Please RSVP", result.data)
+        self.assertNotIn("Party Details", result.data)
 
     def test_rsvp(self):
         result = self.client.post("/rsvp",
                                   data={"name": "Jane",
                                         "email": "jane@jane.com"},
                                   follow_redirects=True)
-        # FIXME: Once we RSVP, we should see the party details, but
-        # not the RSVP form
-        print "FIXME"
+        self.assertNotIn("Please RSVP", result.data)
+        self.assertIn("Party Details", result.data)
 
 
 class PartyTestsDatabase(unittest.TestCase):
