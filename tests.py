@@ -37,6 +37,7 @@ class PartyTestsDatabase(unittest.TestCase):
 
         self.client = app.test_client()
         app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = "booleanbear"
 
         # Connect to test database (uncomment when testing database)
         connect_to_db(app, "postgresql:///testdb")
@@ -53,6 +54,9 @@ class PartyTestsDatabase(unittest.TestCase):
         db.drop_all()
 
     def test_games(self):
+        with self.client as c:
+            with c.session_transaction() as test_session:
+                test_session['RSVP'] = True
         result = self.client.get("/games")
         self.assertIn("CAH", result.data)
 
